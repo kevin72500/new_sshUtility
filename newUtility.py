@@ -1,5 +1,5 @@
 __author__ = 'oupeng'
-# -*- coding: utf8 -*-
+# -*- coding:cp936 -*-
 import sys
 import os
 import paramiko
@@ -11,9 +11,9 @@ from multiprocessing import cpu_count
 
 
 class NewEntities():
-    '''å®šä¹‰å®žä½“ç±»ï¼Œç”¨æ¥å­˜å‚¨é…ç½®æ–‡ä»¶è¯»å–
-    å…¶ä¸­åŒ…å«æ“ä½œæ–¹å¼ï¼Œè¿žæŽ¥åœ°å€ï¼Œç«¯å£å·ï¼Œç”¨æˆ·åï¼Œå¯†ç ï¼Œrootå¯†ç ï¼Œè¿žæŽ¥æ–¹å¼
-    é‡‡æ ·é¢‘çŽ‡ï¼Œé‡‡æ ·æ¬¡æ•°ï¼Œæ–‡ä»¶è·¯å¾„ï¼Œæœ€åŽä¸€é¡¹ä¸ºå‘½ä»¤è¡Œç”¨é€—å·åˆ†éš”ï¼Œæˆ–è€…æ˜¯ä¸Šä¼ ä¸‹è½½è·¯å¾„'''
+    '''¶¨ÒåÊµÌåÀà£¬ÓÃÀ´´æ´¢ÅäÖÃÎÄ¼þ¶ÁÈ¡
+    ÆäÖÐ°üº¬²Ù×÷·½Ê½£¬Á¬½ÓµØÖ·£¬¶Ë¿ÚºÅ£¬ÓÃ»§Ãû£¬ÃÜÂë£¬rootÃÜÂë£¬Á¬½Ó·½Ê½
+    ²ÉÑùÆµÂÊ£¬²ÉÑù´ÎÊý£¬ÎÄ¼þÂ·¾¶£¬×îºóÒ»ÏîÎªÃüÁîÐÐÓÃ¶ººÅ·Ö¸ô£¬»òÕßÊÇÉÏ´«ÏÂÔØÂ·¾¶'''
     def __init__(self,rowLine):
         rowList=rowLine.split(',')
         self.operation=rowList[0]
@@ -25,15 +25,15 @@ class NewEntities():
         self.connWay=rowList[6]
         self.interval=rowList[7]
         self.times=rowList[8]
-        self.filePath=unicode(rowList[9],'utf8')
-        self.restList=unicode(rowList[10:],'utf8')
+        self.filePath=rowList[9]
+        self.restList=rowList[10:]
         
     def __str__(self):
         return 'Current "%s" will perform, "%s" on the %s using port %s thru %s, execute %s times with interval %s, store in %s... rest list are: %s'  % (self.operation, self.userName, self.ip, self.port, self.connWay, self.times, self.interval, self.filePath,self.restList)
 
 
 class ReadFile():
-    '''æ–‡ä»¶è¯»å–ç±»ï¼Œåˆ¤æ–­è·¯å¾„æ˜¯å¦åˆæ³•ï¼Œè¯»å–é…ç½®æ–‡ä»¶ä¸­çš„æ•°æ®åˆ°å†…å­˜ï¼Œå¹¶å­˜å…¥å®žä½“ç±»'''
+    '''ÎÄ¼þ¶ÁÈ¡Àà£¬ÅÐ¶ÏÂ·¾¶ÊÇ·ñºÏ·¨£¬¶ÁÈ¡ÅäÖÃÎÄ¼þÖÐµÄÊý¾Ýµ½ÄÚ´æ£¬²¢´æÈëÊµÌåÀà'''
     def __init__(self,filePath):
         self.filePath=filePath
         
@@ -57,7 +57,7 @@ class ReadFile():
 
 
 class Connector():
-    '''è¿žæŽ¥å™¨ç±»ï¼Œåˆ©ç”¨paramikoæ¨¡å—ï¼Œssh sftpç™»å½•è¿œç¨‹linuxæœåŠ¡å™¨ï¼Œæ‰§è¡Œå‘½ä»¤æˆ–è€…ä¸Šä¼ ä¸‹è½½'''
+    '''Á¬½ÓÆ÷Àà£¬ÀûÓÃparamikoÄ£¿é£¬ssh sftpµÇÂ¼Ô¶³Ìlinux·þÎñÆ÷£¬Ö´ÐÐÃüÁî»òÕßÉÏ´«ÏÂÔØ'''
     def __init__(self,ip,port,name,passwd,connWay):
         self.ip=ip
         self.port=int(port)
@@ -87,11 +87,13 @@ class Connector():
         finally:
             t.close()
             print 'Upload done!!!'
-            answer=raw_input("would you like to quit? y/yes to quit")
+            answer=raw_input("this is using to pause output, click enter to exit!!")
             if answer=='y'or answer=="yes":
                 quit()
 
     def sftpDownLoad(self,localPath,remotePath):
+        print localPath
+        print remotePath
         try:
             t = paramiko.Transport((self.ip, int(self.port)))
             t.connect(username=self.name, password=self.passwd)
@@ -102,8 +104,6 @@ class Connector():
             # pbar = ProgressBar(widgets=widgets, maxval=file_size)
             # pbar.start()
             # progress_bar = lambda transferred, toBeTransferred: pbar.update(transferred)
-            uniLocalPath=unicode(localPath,"utf8")
-            uniRemotePath=unicode(remotePath,"utf8")
             sftp.get(remotePath, localPath)
             # pbar.finish()
         except Exception, e:
@@ -112,7 +112,7 @@ class Connector():
         finally:
             t.close()
             print remotePath, ' -->  Download done!!!'
-            answer=raw_input("would you like to quit? y/yes to quit")
+            answer=raw_input("this is using to pause output, click enter to exit!!")
             if answer=='y'or answer=="yes":
                 quit()
             
@@ -137,7 +137,7 @@ class Connector():
             ssh.close()
         finally:
             ssh.close()
-            answer=raw_input("would you like to quit? y/yes to quit")
+            answer=raw_input("this is using to pause output, click enter to exit!!")
             if answer=='y'or answer=="yes":
                 quit()
             
@@ -174,7 +174,7 @@ class Connector():
             ssh.close()
         finally:
             ssh.close()
-            answer=raw_input("would you like to quit? y/yes to quit")
+            answer=raw_input("this is using to pause output, click enter to exit!!")
             if answer=='y'or answer=="yes":
                 quit()
             
