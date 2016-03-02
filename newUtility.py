@@ -39,12 +39,13 @@ class ReadFile():
         self.filePath=filePath
 
     def validatePath(self):
-        f=open(self.filePath)
-        if type(f)!=file:
-            print filePath, " not a valid file!!!"
-            return False
-        else:
+
+        if os.path.isfile(self.filePath):
             return True
+        else:
+            print self.filePath+" not a valid file!!!"
+            return False
+
 
     def parseRow(self):
         operList=[]
