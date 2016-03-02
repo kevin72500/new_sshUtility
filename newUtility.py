@@ -9,8 +9,11 @@ from progressbar import AnimatedMarker, Bar, BouncingBar,Counter,ETA,FileTransfe
 #get num of cpu
 from multiprocessing import cpu_count   
 
+
 class NewEntities():
-    
+    '''定义实体类，用来存储配置文件读取
+    其中包含操作方式，连接地址，端口号，用户名，密码，root密码，连接方式
+    采样频率，采样次数，文件路径，最后一项为命令行用逗号分隔，或者是上传下载路径'''
     def __init__(self,rowLine):
         rowList=rowLine.split(',')
         self.operation=rowList[0]
@@ -22,15 +25,15 @@ class NewEntities():
         self.connWay=rowList[6]
         self.interval=rowList[7]
         self.times=rowList[8]
-        self.filePath=rowList[9]
-        self.restList=rowList[10:]
+        self.filePath=unicode(rowList[9],'utf8')
+        self.restList=unicode(rowList[10:],'utf8')
         
     def __str__(self):
         return 'Current "%s" will perform, "%s" on the %s using port %s thru %s, execute %s times with interval %s, store in %s... rest list are: %s'  % (self.operation, self.userName, self.ip, self.port, self.connWay, self.times, self.interval, self.filePath,self.restList)
 
 
 class ReadFile():
-    
+    '''文件读取类，判断路径是否合法，读取配置文件中的数据到内存，并存入实体类'''
     def __init__(self,filePath):
         self.filePath=filePath
         
@@ -47,14 +50,14 @@ class ReadFile():
         fh=open(self.filePath,'r+')
         for line in fh:
             if not line.startswith('#'):
-                one=NewEntities(line.strip())
+                one=NewEntities(unicode(line.strip(),'utf8'))
                 print one
                 operList.append(one)
         return operList
 
 
 class Connector():
-      
+    '''连接器类，利用paramiko模块，ssh sftp登录远程linux服务器，执行命令或者上传下载'''
     def __init__(self,ip,port,name,passwd,connWay):
         self.ip=ip
         self.port=int(port)
@@ -62,7 +65,7 @@ class Connector():
         self.passwd=passwd
         self.connWay=connWay
 #         print self.ip,type(self.ip),self.port,type(self.port),self.name,type(self.name),self.passwd,type(self.passwd)
-    
+
 
     def sftpUpload(self,localPath,remotePath):
         try:
@@ -99,14 +102,16 @@ class Connector():
             # pbar = ProgressBar(widgets=widgets, maxval=file_size)
             # pbar.start()
             # progress_bar = lambda transferred, toBeTransferred: pbar.update(transferred)
+            uniLocalPath=unicode(localPath,"utf8")
+            uniRemotePath=unicode(remotePath,"utf8")
             sftp.get(remotePath, localPath)
             # pbar.finish()
         except Exception, e:
             print 'Download failed: ', e
             t.close()
         finally:
-            t.close()  
-            print 'Download done!!!'
+            t.close()
+            print remotePath, ' -->  Download done!!!'
             answer=raw_input("would you like to quit? y/yes to quit")
             if answer=='y'or answer=="yes":
                 quit()
