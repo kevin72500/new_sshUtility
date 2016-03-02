@@ -4,7 +4,7 @@ from distutils.core import setup
 import py2exe                            
   
 includes = ["encodings", "encodings.*"]
-data_files = ['newUtilityRecords.txt']
+data_files = ['newUtilityRecords.txt','Execute.bat']
 options = {"py2exe":   
             {   "compressed": 1,           
                 "optimize": 2,   

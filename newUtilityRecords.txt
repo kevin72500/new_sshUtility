@@ -11,5 +11,5 @@ execute,192.168.1.105,22,kevin,kevin,root,ssh,30,2,defaut_output.txt,cp /tmp/SQL
 monitor,192.168.1.105,22,kevin,kevin,root,ssh,3,1,defaut_output.txt,vmstat 1 1|awk '{print $4}'|tail -n 1
 monitor,192.168.1.105,22,kevin,kevin,root,ssh,3,1,defaut_output2.txt,vmstat 1 1|awk '{print $10}'|tail -n 1
 monitor,192.168.1.105,22,kevin,kevin,root,ssh,3,1,defaut_output3.txt,vmstat 1 1|awk '{print $11}'|tail -n 1
-monitor,192.168.1.105,22,kevin,kevin,root,ssh,3,1,defaut_output4.txt,vmstat 1 1|awk '{print $12}'|tail -n 1
-monitor,192.168.1.105,22,kevin,kevin,root,ssh,3,1,defaut_output5.txt,vmstat 1 1|awk '{print $13}'|tail -n 1
+monitor,192.168.1.105,22,kevin,kevin,root,ssh,3,1,defaut_output4.txt,"free -h|awk '{print $3}'|sed -n '3,1p'"
+monitor,192.168.1.105,22,kevin,kevin,root,ssh,3,1,defaut_output5.txt,free -h|awk '{print $3}'|tail -n 1
