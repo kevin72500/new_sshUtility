@@ -7,7 +7,7 @@ import threading
 import time
 from progressbar import AnimatedMarker, Bar, BouncingBar,Counter,ETA,FileTransferSpeed, FormatLabel, Percentage,   ProgressBar, ReverseBar, RotatingMarker,   SimpleProgress, Timer
 #get num of cpu
-from multiprocessing import cpu_count   
+from multiprocessing import cpu_count
 
 
 class NewEntities():
@@ -27,16 +27,17 @@ class NewEntities():
         self.times=rowList[8]
         self.filePath=rowList[9]
         self.restList=rowList[10:]
-        
+
     def __str__(self):
         return 'Current "%s" will perform, "%s" on the %s using port %s thru %s, execute %s times with interval %s, store in %s... rest list are: %s'  % (self.operation, self.userName, self.ip, self.port, self.connWay, self.times, self.interval, self.filePath,self.restList)
+
 
 
 class ReadFile():
     '''文件读取类，判断路径是否合法，读取配置文件中的数据到内存，并存入实体类'''
     def __init__(self,filePath):
         self.filePath=filePath
-        
+
     def validatePath(self):
         f=open(self.filePath)
         if type(f)!=file:
@@ -44,13 +45,13 @@ class ReadFile():
             return False
         else:
             return True
-        
+
     def parseRow(self):
         operList=[]
         fh=open(self.filePath,'r+')
         for line in fh:
             if not line.startswith('#'):
-                one=NewEntities(unicode(line.strip(),'utf8'))
+                one=NewEntities(line.strip())
                 print one
                 operList.append(one)
         return operList
@@ -68,6 +69,8 @@ class Connector():
 
 
     def sftpUpload(self,localPath,remotePath):
+        if os.path.isfile(localPath)==False:
+            print "upload failed "+localPath+" file not exist!!!"
         try:
             t = paramiko.Transport((self.ip, self.port))
             t.connect(username=self.name, password=self.passwd)
@@ -87,9 +90,9 @@ class Connector():
         finally:
             t.close()
             print 'Upload done!!!'
-            answer=raw_input("this is using to pause output, click enter to exit!!")
-            if answer=='y'or answer=="yes":
-                quit()
+            # answer=raw_input("this is using to pause output, click enter to exit!!")
+            # if answer=='y'or answer=="yes":
+            #     quit()
 
     def sftpDownLoad(self,localPath,remotePath):
         print localPath
@@ -112,10 +115,10 @@ class Connector():
         finally:
             t.close()
             print remotePath, ' -->  Download done!!!'
-            answer=raw_input("this is using to pause output, click enter to exit!!")
-            if answer=='y'or answer=="yes":
-                quit()
-            
+            # answer=raw_input("this is using to pause output, click enter to exit!!")
+            # if answer=='y'or answer=="yes":
+            #     quit()
+
     def sshExecute(self,commandList):
         try:
             ssh = paramiko.SSHClient()
@@ -137,17 +140,17 @@ class Connector():
             ssh.close()
         finally:
             ssh.close()
-            answer=raw_input("this is using to pause output, click enter to exit!!")
-            if answer=='y'or answer=="yes":
-                quit()
-            
+            # answer=raw_input("this is using to pause output, click enter to exit!!")
+            # if answer=='y'or answer=="yes":
+            #     quit()
+
     def sshMonitor(self,commandList,outFileName="out.txt",exeInterval=0,exeTimes=1):
-#         paramiko.util.log_to_file(outFileName) 
+#         paramiko.util.log_to_file(outFileName)
         outfh=open(outFileName,'a+')
         try:
             ssh = paramiko.SSHClient()
             ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            ssh.connect(str(self.ip).strip(), int(self.port), str(self.name).strip(), str(self.passwd)) 
+            ssh.connect(str(self.ip).strip(), int(self.port), str(self.name).strip(), str(self.passwd))
             print 'Executing.....'
             for command in commandList:
                 # print command
@@ -157,7 +160,7 @@ class Connector():
                 else:
 #                     command=command.strip()
                     for i in range(0,int(exeTimes)):
-        
+
                         stdin, stdout, stderr = ssh.exec_command(command)
                         outValue=stdout.read()
                         print outValue
@@ -174,64 +177,61 @@ class Connector():
             ssh.close()
         finally:
             ssh.close()
-            answer=raw_input("this is using to pause output, click enter to exit!!")
-            if answer=='y'or answer=="yes":
-                quit()
-            
-# class ThreadOperation(threading.Thread):
-#     
-#     def __init__(self,ip,port,name,passwd,connWay):
-#         threading.Thread.__init__(self)
-#         self.ip=ip
-#         self.port=port
-#         self.name=name
-#         self.passwd=passwd
-#         self.connWay=connWay
-#     
-#     def run(self):
-#         print 'multi-threading execute starting...'
-        
-    
-    
-    
-    
-        
-# if __name__=='__main__':
-#     rf=ReadFile("newUtilityRecords.txt")
-#     if rf.validatePath()==True:
-#         eList=rf.parseRow()
-#
-#     for oneLine in eList:
-#         if oneLine.operation=='upload':
-#             Conn=Connector(oneLine.ip,oneLine.port,oneLine.userName,oneLine.passWord,oneLine.connWay)
-#             Conn.sftpUpload(oneLine.restList[1].strip(),oneLine.restList[0].strip())
-#         elif oneLine.operation=='download':
-#             Conn=Connector(oneLine.ip,oneLine.port,oneLine.userName,oneLine.passWord,oneLine.connWay)
-#             Conn.sftpDownLoad(oneLine.restList[1].strip(),oneLine.restList[0].strip())
-#         elif oneLine.operation=='execute':
-#             Conn=Connector(oneLine.ip,oneLine.port,oneLine.userName,oneLine.passWord,oneLine.connWay)
-#             Conn.sshExecute(oneLine.restList)
-#         elif oneLine.operation=='monitor':
-#             Conn=Connector(oneLine.ip,oneLine.port,oneLine.userName,oneLine.passWord,oneLine.connWay)
-#             Conn.sshMonitor(oneLine.restList,oneLine.filePath,oneLine.interval,oneLine.times)
-#
-    
-    
-    
+            # answer=raw_input("this is using to pause output, click enter to exit!!")
+            # if answer=='y'or answer=="yes":
+            #     quit()
+
+
+threadLock=threading.Lock()
+class ThreadOperation(threading.Thread):
+
+    def __init__(self,eList):
+        threading.Thread.__init__(self)
+        self.eList=eList
+
+    def run(self):
+        print 'multi-threading execute starting...'
+        threadLock.acquire()
+        executer(self.eList)
+        threadLock.release()
+
+
+
+# def runMain(configFilePath="newUtilityRecords.txt"):
+
+
+def executer(oneLine):
+    # for oneLine in eList:
+        if oneLine.operation=='upload':
+            Conn=Connector(oneLine.ip,oneLine.port,oneLine.userName,oneLine.passWord,oneLine.connWay)
+            Conn.sftpUpload(oneLine.restList[1].strip(),oneLine.restList[0].strip())
+        elif oneLine.operation=='download':
+            Conn=Connector(oneLine.ip,oneLine.port,oneLine.userName,oneLine.passWord,oneLine.connWay)
+            Conn.sftpDownLoad(oneLine.restList[1].strip(),oneLine.restList[0].strip())
+        elif oneLine.operation=='execute':
+            Conn=Connector(oneLine.ip,oneLine.port,oneLine.userName,oneLine.passWord,oneLine.connWay)
+            Conn.sshExecute(oneLine.restList)
+        elif oneLine.operation=='monitor':
+            Conn=Connector(oneLine.ip,oneLine.port,oneLine.userName,oneLine.passWord,oneLine.connWay)
+            Conn.sshMonitor(oneLine.restList,oneLine.filePath,oneLine.interval,oneLine.times)
+
+
+
 rf=ReadFile("newUtilityRecords.txt")
 if rf.validatePath()==True:
     eList=rf.parseRow()
+    NumOfThread=len(eList)
+# for one in eList:
+#     executer(one)
 
-for oneLine in eList:
-    if oneLine.operation=='upload':
-        Conn=Connector(oneLine.ip,oneLine.port,oneLine.userName,oneLine.passWord,oneLine.connWay)
-        Conn.sftpUpload(oneLine.restList[1].strip(),oneLine.restList[0].strip())
-    elif oneLine.operation=='download':
-        Conn=Connector(oneLine.ip,oneLine.port,oneLine.userName,oneLine.passWord,oneLine.connWay)
-        Conn.sftpDownLoad(oneLine.restList[1].strip(),oneLine.restList[0].strip())
-    elif oneLine.operation=='execute':
-        Conn=Connector(oneLine.ip,oneLine.port,oneLine.userName,oneLine.passWord,oneLine.connWay)
-        Conn.sshExecute(oneLine.restList)
-    elif oneLine.operation=='monitor':
-        Conn=Connector(oneLine.ip,oneLine.port,oneLine.userName,oneLine.passWord,oneLine.connWay)
-        Conn.sshMonitor(oneLine.restList,oneLine.filePath,oneLine.interval,oneLine.times)
+
+threads=[]
+for i in range(0,NumOfThread):
+    threads.append(ThreadOperation(eList[i]).start())
+for t in threads:
+    t.join()
+answer='n'
+while(answer!='y'):
+    answer=raw_input("please input y to exit")
+
+
