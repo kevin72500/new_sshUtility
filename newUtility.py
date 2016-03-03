@@ -153,29 +153,29 @@ class Connector():
             ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             ssh.connect(str(self.ip).strip(), int(self.port), str(self.name).strip(), str(self.passwd))
             print 'Executing.....'
-            for command in commandList:
-                # print command
-                if len(commandList)>1:
-                    print "Your command more than one, please shrank it"
-                    quit()
-                else:
-#                     command=command.strip()
-                    for i in range(0,int(exeTimes)):
 
-                        stdin, stdout, stderr = ssh.exec_command(command)
-                        outValue=stdout.read()
-                        print outValue
-                        if outValue=="":
-                            print "command: ",command, " ,execute Failed and no output"
-                        else:
-                            print "command: ", command, " ,execute Success, output is: ",outValue
-                        curTime=time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
-                        outfh.writelines(curTime+"    "+outValue)
-                        time.sleep(int(exeInterval))
-                    outfh.close()
+            # for command in commandList:
+            if len(commandList)>1:
+                print "Your command more than one, please make sure your command just have one command!!!"
+                command=",".join(commandList)
+            else:
+                command="".join(commandList).strip()
+            for i in range(0,int(exeTimes)):
+                stdin, stdout, stderr = ssh.exec_command(command)
+                outValue=stdout.read()
+                print outValue
+                if outValue=="":
+                    print "command: ",command, " ,execute Failed and no output"
+                else:
+                    print "command: ", command, " ,execute Success, output is: ",outValue
+                curTime=time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
+                outfh.writelines(curTime+"    "+outValue)
+                time.sleep(int(exeInterval))
+            outfh.close()
         except Exception, e:
             print 'remote execute error: ', e
             ssh.close()
+            exit()
         finally:
             ssh.close()
             # answer=raw_input("this is using to pause output, click enter to exit!!")
@@ -231,7 +231,7 @@ for i in range(0,NumOfThread):
     threads.append(ThreadOperation(eList[i]).start())
 for t in threads:
     t.join()
-answer='n'
+answer=raw_input("please input y to exit")
 while(answer!='y'):
     answer=raw_input("please input y to exit")
 
