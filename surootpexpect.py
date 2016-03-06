@@ -6,7 +6,7 @@ import pexpect
 import re
 import time
 
-def surootexpect(filename="rootlist"):
+def surootexpect(filename="rootlist.txt"):
     csvReader = csv.reader(open(filename, 'rb'))
     for row in csvReader:
         parameterStr = ','.join(row)
