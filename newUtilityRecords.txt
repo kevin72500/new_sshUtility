@@ -8,8 +8,10 @@ upload,192.168.1.105,22,kevin,kevin,root,sftp,,,,/home/kevin/SQL.txt,C:\Users\ou
 upload,192.168.1.105,22,kevin,kevin,root,sftp,,,,/home/kevin/Desktop/SQL.txt,C:\Users\oupeng\Desktop\SQL.txt
 download,192.168.1.105,22,kevin,kevin,root,sftp,,,defaut_output.txt,/tmp/passwd.txt,C:\Users\oupeng\Desktop\passwd.txt
 execute,192.168.1.105,22,kevin,kevin,root,ssh,30,2,defaut_output.txt,cp /tmp/SQL.txt ~,chmod 755 kkk
-monitor,192.168.1.105,22,kevin,kevin,root,ssh,3,1,defaut_output.txt,vmstat 1 1|awk '{print $4}'|tail -n 1
-monitor,192.168.1.105,22,kevin,kevin,root,ssh,3,1,defaut_output2.txt,vmstat 1 1|awk '{print $10}'|tail -n 1
-monitor,192.168.1.105,22,kevin,kevin,root,ssh,3,1,defaut_output3.txt,vmstat 1 1|awk '{print $11}'|tail -n 1
-monitor,192.168.1.105,22,kevin,kevin,root,ssh,3,1,defaut_output4.txt,free -h|awk '{print $3}'|sed -n '3,1p'
-monitor,192.168.1.105,22,kevin,kevin,root,ssh,3,1,defaut_output5.txt,free -h|awk '{print $3}'|tail -n 1
+monitor,192.168.1.105,22,kevin,kevin,root,ssh,3,1,105_cpu_idle.txt, vmstat 1 1|awk '{print $15}'|tail -n 1
+monitor,192.168.1.105,22,kevin,kevin,root,ssh,3,1,105_block_queue.txt, vmstat 1 1|awk '{print $2}'|tail -n 1
+monitor,192.168.1.105,22,kevin,kevin,root,ssh,3,1,105_swapIn.txt, vmstat 1 1|awk '{print $7}'|tail -n 1
+monitor,192.168.1.105,22,kevin,kevin,root,ssh,3,1,105_UsedMemory.txt,free -h|awk '{print $3}'|sed -n '3,1p'
+monitor,192.168.1.105,22,kevin,kevin,root,ssh,3,1,105_swapOut.txt, vmstat 1 1|awk '{print $8}'|tail -n 1
+monitor,192.168.1.105,22,kevin,kevin,root,ssh,3,1,105_IO_in.txt, vmstat 1 1|awk '{print $9}'|tail -n 1
+monitor,192.168.1.105,22,kevin,kevin,root,ssh,3,1,105_IO_out.txt, vmstat 1 1|awk '{print $10}'|tail -n 1
