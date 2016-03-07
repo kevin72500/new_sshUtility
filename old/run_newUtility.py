@@ -1,23 +1,11 @@
-__author__ = 'oupeng'
-import threading
-from Connector import Connector
-from ReadFile import ReadFile
+from old.newUtility import ReadFile,Connector
 
-threadLock=threading.Lock()
-class ThreadOperation(threading.Thread):
 
-    def __init__(self,eList):
-        threading.Thread.__init__(self)
-        self.eList=eList
-
-    def run(self):
-        print 'multi-threading execute starting...'
-        threadLock.acquire()
-        executer(self.eList)
-        threadLock.release()
-
-def executer(oneLine):
-    # for oneLine in eList:
+rf=ReadFile("newUtilityRecords.txt")
+if rf.validatePath()==True:
+    eList=rf.parseRow()
+    
+for oneLine in eList:
     if oneLine.operation=='upload':
         Conn=Connector(oneLine.ip,oneLine.port,oneLine.userName,oneLine.passWord,oneLine.connWay)
         Conn.sftpUpload(oneLine.restList[1].strip(),oneLine.restList[0].strip())
@@ -30,4 +18,3 @@ def executer(oneLine):
     elif oneLine.operation=='monitor':
         Conn=Connector(oneLine.ip,oneLine.port,oneLine.userName,oneLine.passWord,oneLine.connWay)
         Conn.sshMonitor(oneLine.restList,oneLine.filePath,oneLine.interval,oneLine.times)
-

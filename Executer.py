@@ -1,17 +1,24 @@
 __author__ = 'oupeng'
-import Connector
+# -*- conding:utf8 -*-
+from ReadFile import ReadFile
+from ThreadOperation import ThreadOperation
 
-def executer(oneLine):
-    # for oneLine in eList:
-        if oneLine.operation=='upload':
-            Conn=Connector(oneLine.ip,oneLine.port,oneLine.userName,oneLine.passWord,oneLine.connWay)
-            Conn.sftpUpload(oneLine.restList[1].strip(),oneLine.restList[0].strip())
-        elif oneLine.operation=='download':
-            Conn=Connector(oneLine.ip,oneLine.port,oneLine.userName,oneLine.passWord,oneLine.connWay)
-            Conn.sftpDownLoad(oneLine.restList[1].strip(),oneLine.restList[0].strip())
-        elif oneLine.operation=='execute':
-            Conn=Connector(oneLine.ip,oneLine.port,oneLine.userName,oneLine.passWord,oneLine.connWay)
-            Conn.sshExecute(oneLine.restList)
-        elif oneLine.operation=='monitor':
-            Conn=Connector(oneLine.ip,oneLine.port,oneLine.userName,oneLine.passWord,oneLine.connWay)
-            Conn.sshMonitor(oneLine.restList,oneLine.filePath,oneLine.interval,oneLine.times)
+
+if __name__=='__main__':
+
+    rf=ReadFile("newUtilityRecords.txt")
+    if rf.validatePath()==True:
+        eList=rf.parseRow()
+        NumOfThread=len(eList)
+    # for one in eList:
+    #     executer(one)
+
+
+    threads=[]
+    for i in range(0,NumOfThread):
+        threads.append(ThreadOperation(eList[i]).start())
+    for t in threads:
+        t.join()
+    answer=raw_input("please input y to exit")
+    while(answer!='y'):
+        answer=raw_input("please input y to exit")

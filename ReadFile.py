@@ -1,6 +1,6 @@
 __author__ = 'oupeng'
 # -*- coding:utf8 -*-
-import NewEntities
+from NewEntities import NewEntities
 import os
 
 class ReadFile():
