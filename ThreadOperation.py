@@ -11,7 +11,7 @@ class ThreadOperation(threading.Thread):
         self.eList=eList
 
     def run(self):
-        print 'multi-threading execute starting...'
+        print('multi-threading execute starting...')
         threadLock.acquire()
         executer(self.eList)
         threadLock.release()

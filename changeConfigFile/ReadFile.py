@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 __author__ = 'oupeng'
 
 from NewEntities import NewEntities
@@ -14,7 +14,7 @@ class ReadFile():
         if os.path.isfile(self.filePath):
             return True
         else:
-            print(self.filePath+" not a valid file!!!")
+            print self.filePath+" not a valid file!!!"
             return False
 
 
@@ -24,6 +24,6 @@ class ReadFile():
         for line in fh:
             if not line.startswith('#'):
                 one=NewEntities(line.strip())
-                print(one)
+                print one
                 operList.append(one)
         return operList

@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 __author__ = 'oupeng'
 
 from ReadFile import ReadFile
@@ -20,6 +20,6 @@ if __name__=='__main__':
         threads.append(ThreadOperation(eList[i]).start())
     for t in threads:
         t.join()
-    answer=input("please input y to exit")
+    answer=raw_input("please input y to exit")
     while(answer!='y'):
-        answer=input("please input y to exit")
+        answer=raw_input("please input y to exit")
