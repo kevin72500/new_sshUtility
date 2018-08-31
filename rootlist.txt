@@ -1,1 +1,1 @@
-"192.168.44.32",22,"app","app_!QAZxsw2","sudo root","wlwzyc","echo 'UseLogin yes' >> /etc/ssh/sshd_config","service sshd restart"
+"xxx.xxx.xxx.xxx",22,"root","123456789","sudo root","wlwzyc","echo 'UseLogin yes' >> /etc/ssh/sshd_config","service sshd restart"
