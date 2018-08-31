@@ -1,1 +1,0 @@
-"xxx.xxx.xxx.xxx",22,"root","123456789","sudo root","wlwzyc","echo 'UseLogin yes' >> /etc/ssh/sshd_config","service sshd restart"
